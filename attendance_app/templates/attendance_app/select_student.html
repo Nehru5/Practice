@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Attendance</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fc;
+      padding: 40px;
+      color: #333;
+    }
+
+    .attendance-container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .attendance-title {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="attendance-container">
+    <h2 class="attendance-title">Mark Attendance for Batch: {{ batch.name }}</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      <label for="student-select">Select Student who showed QR:</label>
+      <select name="student_id" id="student-select" required>
+        {% for student in students %}
+          <option value="{{ student.id }}">{{ student.full_name }}</option>
+        {% endfor %}
+      </select>
+
+      <button type="submit" class="submit-btn">Mark Attendance</button>
+    </form>
+  </div>
+
+</body>
+</html>
