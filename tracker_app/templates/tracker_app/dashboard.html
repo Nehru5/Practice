@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tracker Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding-top: 100px; /* for navbar spacing */
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .navbar h2 {
+            font-size: 1.5rem;
+            color: #2980b9;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-links a:hover {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .batch {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .batch h2 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .batch h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .attendance-log {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+            margin-left: 15px;
+            list-style-type: square;
+        }
+
+        .no-records {
+            color: gray;
+            font-size: 14px;
+            margin-left: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"], .export-btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 5px;
+            text-decoration: none;
+        }
+
+        button[type="submit"]:hover, .export-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .student-name {
+            font-weight: 500;
+        }
+
+        .percentage {
+            color: green;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .export-buttons {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h2>Tracker Dashboard</h2>
+        <div class="navbar-links">
+            <a href="{% url 'admin_dashboard' %}">Back to Home</a>
+        </div>
+    </div>
+
+    <h1>Tracker Dashboard</h1>
+
+    <form method="get" style="text-align:center; margin-bottom: 30px;">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search by batch name">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if batch_data %}
+        {% for item in batch_data %}
+            <div class="batch">
+                <h2>Batch: {{ item.batch_name }}</h2>
+                <h3>Trainer: {{ item.trainer.full_name }}</h3>
+
+                <div class="export-buttons">
+                    <a href="{% url 'export_attendance_csv' item.batch_name %}?trainer_id={{ item.trainer.id }}" class="export-btn">Export CSV</a>
+                    <a href="{% url 'export_attendance_pdf' item.batch_name %}?trainer_id={{ item.trainer.id }}" class="export-btn">Export PDF</a>
+                </div>
+
+                {% if item.students %}
+                    <ul>
+                        {% for student_info in item.students %}
+                            <li>
+                                <span class="student-name">{{ student_info.student.full_name }}</span>
+                                
+                                {% if student_info.attendance_percentage is not None %}
+                                    <span class="percentage">({{ student_info.attendance_percentage }}%)</span>
+                                {% endif %}
+
+                                {% if student_info.attendance_logs %}
+                                    <ul class="attendance-log">
+                                        {% for log in student_info.attendance_logs %}
+                                            <li>📅 {{ log.date }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <div class="no-records">No attendance records.</div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No students found.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center; color: #555;">No batches found matching your search.</p>
+    {% endif %}
+</body>
+</html>
