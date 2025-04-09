@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Attendance</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fa;
+      padding: 40px;
+      color: #333;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .attendance-form {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .student-checkbox {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .student-checkbox input {
+      margin-right: 10px;
+    }
+
+    .submit-button {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .submit-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 class="page-title">Mark Attendance for Batch: {{ batch.name }}</h2>
+
+  <form method="post" class="attendance-form">
+    {% csrf_token %}
+    {% for student in students %}
+      <div class="student-checkbox">
+        <input type="checkbox" name="student_ids" value="{{ student.id }}">
+        {{ student.full_name }} ({{ student.phone }})
+      </div>
+    {% endfor %}
+    
+    <button type="submit" class="submit-button">Mark Attendance</button>
+  </form>
+
+</body>
+</html>
