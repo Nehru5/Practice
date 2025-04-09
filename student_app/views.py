@@ -59,7 +59,7 @@ def student_dashboard(request):
         if not trainer:
             continue
 
-        qr_data = f"{settings.NGROK_URL}/attendance/mark/{student.id}/{batch.qr_code_uuid}/{trainer.id}/"
+        qr_data = f"{settings.RENDER_URL}/attendance/mark/{student.id}/{batch.qr_code_uuid}/{trainer.id}/"
         qr_filename = f"student_{student.id}_batch_{batch.id}_qr.png"
         qr_path = os.path.join(settings.MEDIA_ROOT, 'qr_codes', qr_filename)
 

@@ -256,7 +256,7 @@ def create_batch(request):
 
         
 
-        qr_data = f"{settings.NGROK_URL}/attendance/mark/{batch.qr_code_uuid}/"
+        qr_data = f"{settings.RENDER_URL}/attendance/mark/{batch.qr_code_uuid}/"
 
         qr = qrcode.make(qr_data)
 
