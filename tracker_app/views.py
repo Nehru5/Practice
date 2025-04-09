@@ -167,7 +167,10 @@ def export_csv(request, batch_name):
 
    
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="{batch_name}_{trainer.full_name if trainer else 'all'}_attendance.csv"'
+    filename = f"{batch_name}_{trainer.full_name if trainer else 'all'}_attendance.csv"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+
 
     writer = csv.writer(response)
 
