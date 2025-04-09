@@ -167,8 +167,11 @@ def export_csv(request, batch_name):
 
    
     response = HttpResponse(content_type='text/csv')
-    filename = f"{batch_name}_{trainer.full_name if trainer else 'all'}_attendance.csv"
+    sanitized_batch_name = batch_name.replace('"', '').replace("'", "")
+    sanitized_trainer_name = trainer.full_name.replace('"', '').replace("'", "") if trainer else 'all'
+    filename = f"{sanitized_batch_name}_{sanitized_trainer_name}_attendance.csv"
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
 
 
 
@@ -245,7 +248,10 @@ def export_pdf(request, batch_name):
     html = template.render(context)
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f"attachment; filename=\"{batch_name}_{trainer.full_name if trainer else 'all'}.pdf\""
+    sanitized_batch_name = batch_name.replace('"', '').replace("'", "")
+    sanitized_trainer_name = trainer.full_name.replace('"', '').replace("'", "") if trainer else 'all'
+    response['Content-Disposition'] = f'attachment; filename="{sanitized_batch_name}_{sanitized_trainer_name}.pdf"'
+
 
 
     pisa.CreatePDF(html, dest=response)
