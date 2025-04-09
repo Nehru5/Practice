@@ -9,16 +9,12 @@ from xhtml2pdf import pisa
 from auth_app.models import BaseUser
 from tracker_app.models import TrackerProfile, Batch
 from attendance_app.models import Attendance
-from django.shortcuts import render
 from trainer_app.models import TrainerProfile
-import csv
-from collections import defaultdict
-from django.http import HttpResponse
-from attendance_app.models import Attendance
-from trainer_app.models import TrainerProfile
+
+
 from tracker_app.models import Batch
 
-# tracker_app/views.py
+
 
 @never_cache
 def tracker_signup(request):
@@ -246,7 +242,8 @@ def export_pdf(request, batch_name):
     html = template.render(context)
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{batch_name}_{trainer.full_name if trainer else 'all'}.pdf"'
+    response['Content-Disposition'] = f"attachment; filename=\"{batch_name}_{trainer.full_name if trainer else 'all'}.pdf\""
+
 
     pisa.CreatePDF(html, dest=response)
     return response
