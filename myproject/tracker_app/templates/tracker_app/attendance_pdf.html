@@ -1,0 +1,66 @@
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 5px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Batch: {{ batch_name }}</h2>
+    <h3>Trainer: {{ trainer_name }}</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Trainer Name</th>
+                {% for date in unique_dates %}
+                    <th>{{ date }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for student_name, data in student_data.items %}
+            <tr>
+                <td>{{ student_name }}</td>
+                <td>{{ data.trainer }}</td>
+                {% for date in unique_dates %}
+                    <td>
+                        {{ data.status_by_date|get_item:date }}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

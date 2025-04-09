@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 100px 20px 40px;
+      animation: backgroundShift 20s ease infinite;
+    }
+
+    @keyframes backgroundShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    #reader {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    a {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #2980b9;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    a:hover {
+      background-color: #3498db;
+      transform: scale(1.05);
+    }
+
+    #scan-error-message {
+      margin-top: 15px;
+      color: red;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Scan Student QR</h2>
+  <div id="reader"></div>
+  <div id="scan-error-message"></div>
+  <a href="{% url 'trainer_dashboard' %}">Back to Dashboard</a>
+
+  <script>
+    const qrScanner = new Html5Qrcode("reader");
+
+    function onScanSuccess(qrMessage) {
+      qrScanner.stop().then(() => {
+        window.location.href = qrMessage;
+      }).catch(err => {
+        console.error("Failed to stop scanner:", err);
+        alert("Error: Failed to stop scanner.");
+      });
+    }
+
+    function onScanFailure(error) {
+      console.log(error);
+    }
+
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        qrScanner.start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+            qrbox: { width: 700, height: 700 }
+          },
+          onScanSuccess,
+          onScanFailure
+        );
+      } else {
+        alert("No camera found on this device.");
+      }
+    }).catch(err => {
+      alert("Camera access failed: " + err);
+      console.error(err);
+    });
+  </script>
+
+</body>
+</html>
